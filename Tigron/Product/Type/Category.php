@@ -129,4 +129,20 @@ class Category {
 		return $categories;
 	}
 
+	/**
+	 * Get by identifier
+	 *
+	 * @access public
+	 * @param string $identifier
+	 * @return Category
+	 */
+	public static function get_by_identifier($identifier) {
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product_type_category?wsdl');
+		$details = $client->get_by_identifier($identifier);
+
+		$category = new self();
+		$category->details = $details;
+		$category->id = $details['id'];
+		return $category;
+	}
 }

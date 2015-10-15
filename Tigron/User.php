@@ -108,29 +108,22 @@ class User {
 	}
 
 	/**
-	 * Get all
+	 * Get by reseller
 	 *
 	 * @access public
+	 * @param \Tigron\Reseller $reseller
 	 * @return array $users
 	 */
-	public static function get_all() {
+	public static function get_by_reseller(\Tigron\Reseller $reseller) {
 		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/user?wsdl');
-		$details = $client->get_by_reseller(self::get()->reseller_id);
+		$details = $client->get_by_reseller($reseller->id);
 		$users = array();
 		foreach ($details as $detail) {
 			$temp_user = new User();
 			$temp_user->id = $detail['id'];
 			$temp_user->details = $detail;
-
-			$customer_tigron_users = \Customer_Tigron_User::get_by_tigron_user($temp_user);
-
-			foreach ($customer_tigron_users as $customer_tigron_user) {
-				$temp_user->customer_id = $customer_tigron_user->customer_id;
-			}
-
-			$users[$temp_user->username] = $temp_user;
+			$users[] = $temp_user;
 		}
-		ksort($users);
 		return $users;
 	}
 

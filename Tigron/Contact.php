@@ -8,7 +8,7 @@
  */
 namespace Tigron;
 
-class Product {
+class Contact {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Product {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -87,54 +87,38 @@ class Product {
 	}
 
 	/**
-	 * Save function
-	 *
-	 * @access public
-	 */
-	public function save() {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
-		if (isset($this->details['id']) AND $this->details['id'] > 0) {
-			$this->details = $client->update($this->details['id'], $this->details);
-		} else {
-			$this->id = $client->insert($this->details);
-		}
-		$this->get_details();
-	}
-
-	/**
 	 * Get by id
 	 *
 	 * @access public
-	 * @return \Tigron\Product $product
+	 * @return \Tigron\Contact $contact
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
 		$details = $client->get_by_id($id);
-		$product = new self();
-		$product->id = $details['id'];
-		$product->details = $details;
+		$contact = new self();
+		$contact->id = $details['id'];
+		$contact->details = $details;
 
-		return $product;
+		return $contact;
 	}
 
 	/**
-	 * Get by user category
+	 * Get by user
 	 *
 	 * @access public
 	 * @param \Tigron\User $user
-	 * @param \Tigron\Product\Category $category
-	 * @return array $products
+	 * @return array $contacts
 	 */
-	public static function get_by_user_category(\Tigron\User $user, \Tigron\Product\Type\Category $category) {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
-		$data = $client->get_by_user_category($user->id, $category->id);
-		$products = [];
+	public static function get_by_user(\Tigron\User $user) {
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
+		$data = $client->get_by_user($user->id);
+		$contacts = [];
 		foreach ($data as $details) {
-			$product = new self();
-			$product->details = $details;
-			$product->id = $details['id'];
-			$products[] = $product;
+			$contact = new self();
+			$contact->details = $details;
+			$contact->id = $details['id'];
+			$contacts[] = $contact;
 		}
-		return $products;
+		return $contacts;
 	}
 }
