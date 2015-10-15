@@ -6,9 +6,9 @@
  *
  * @package Tigron
  */
-namespace Tigron;
+namespace Tigron\Invoice;
 
-class Invoice_Queue {
+class Queue {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Invoice_Queue {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new Client_Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Invoice_Queue {
 	 * @access public
 	 */
 	public function save() {
-		$client = new Client_Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -119,7 +119,7 @@ class Invoice_Queue {
 	 * @return array $users
 	 */
 	public static function get_all() {
-		$client = new Client_Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_queue?wsdl');
 		$details = $client->get_by_reseller(User::get()->reseller_id);
 		$users = array();
 		foreach ($details as $detail) {

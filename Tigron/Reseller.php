@@ -46,7 +46,7 @@ class Reseller {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new Client_Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Reseller {
 	 * @access public
 	 */
 	public function save() {
-		$client = new Client_Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {

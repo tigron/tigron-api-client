@@ -45,7 +45,7 @@ class Product {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new Client_Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Product {
 	 * @access public
 	 */
 	public function save() {
-		$client = new Client_Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -108,7 +108,7 @@ class Product {
 	 * @return Product $product
 	 */
 	public static function get_by_id($id) {
-		$client = new Client_Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product?wsdl');
 		$details = $client->get_by_id($id);
 		$product = new self();
 		$product->id = $details['id'];

@@ -6,9 +6,9 @@
  *
  * @package Tigron
  */
-namespace Tigron;
+namespace Tigron\Order;
 
-class Order_Item {
+class Item {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Order_Item {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new Client_Soap('http://api.tigron.net/soap/order_item?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/order_item?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Order_Item {
 	 * @access public
 	 */
 	public function save() {
-		$client = new Client_Soap('http://api.tigron.net/soap/order_item?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/order_item?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -108,7 +108,7 @@ class Order_Item {
 	 * @return Order_Item $order_item
 	 */
 	public static function get_by_id($id) {
-		$client = new Client_Soap('http://api.tigron.net/soap/order_item?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/order_item?wsdl');
 		$details = $client->get_by_id($id);
 		$order_item = new self();
 		$order_item->id = $details['id'];

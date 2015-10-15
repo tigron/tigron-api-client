@@ -6,9 +6,9 @@
  *
  * @package Tigron
  */
-namespace Tigron;
+namespace Tigron\Product\Type;
 
-class Product_Type_Category {
+class Category {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Product_Type_Category {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new Client_Soap('http://api.tigron.net/soap/product_type_category?wsdl');
+		$client = new Tigron\Client\Soap('http://api.tigron.net/soap/product_type_category?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Product_Type_Category {
 	 * @access public
 	 */
 	public function save() {
-		$client = new Client_Soap('http://api.tigron.net/soap/product_type_category?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product_type_category?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -107,7 +107,7 @@ class Product_Type_Category {
 	 * @access public
 	 */
 	public function get_product_types() {
-		return Product_Type::get_by_product_type_category($this);
+		return \Tigron\Product\Type::get_by_product_type_category($this);
 	}
 
 	/**
@@ -117,11 +117,11 @@ class Product_Type_Category {
 	 * @return array $users
 	 */
 	public static function get_all() {
-		$client = new Client_Soap('http://api.tigron.net/soap/product_type_category?wsdl');
+		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/product_type_category?wsdl');
 		$details = $client->get_all();
 		$categories = array();
 		foreach ($details as $detail) {
-			$temp_ptc = new Product_Type_Category();
+			$temp_ptc = new self();
 			$temp_ptc->id = $detail['id'];
 			$temp_ptc->details = $detail;
 			$categories[] = $temp_ptc;
