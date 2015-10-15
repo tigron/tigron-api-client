@@ -1,2 +1,5 @@
 # tigron-api-client
-A PHP client to communicate with Tigron Control panel
+
+## Description
+
+This packages allows you to communicate with Tigron Control panel.
