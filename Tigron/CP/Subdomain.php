@@ -1,14 +1,14 @@
 <?php
 /**
- * Tigron Front-user
+ * Tigron
  *
- * This file is a part of the Tigron Application 'Front-User'
+ * This file is a part of the Tigron Api Client
  *
  * @package Tigron
  */
-namespace Tigron\Invoice;
+namespace Tigron\CP;
 
-class Contact {
+class Subdomain {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Contact {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -87,34 +87,38 @@ class Contact {
 	}
 
 	/**
-	 * Save function
-	 *
-	 * @access public
-	 */
-	public function save() {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
-		if (isset($this->details['id']) AND $this->details['id'] > 0) {
-			$this->details = $client->update($this->details['id'], $this->details);
-		} else {
-			$this->id = $client->insert($this->details);
-		}
-		$this->get_details();
-	}
-
-	/**
 	 * Get by id
 	 *
 	 * @access public
-	 * @return Invoice_Contact $order_item
+	 * @return \Tigron\Product $product
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
 		$details = $client->get_by_id($id);
-		$invoice_contact = new self();
-		$invoice_contact->id = $details['id'];
-		$invoice_contact->details = $details;
-
-		return $invoice_contact;
+		$subdomain = new self();
+		$subdomain->id = $details['id'];
+		$subdomain->details = $details;
+		return $subdomain;
 	}
 
+	/**
+	 * Get by domain tld
+	 *
+	 * @access public
+	 * @param string $domain
+	 * @param string $tld
+	 * @return array $subdomains
+	 */
+	public static function get_by_domain_tld($domain, $tld) {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$data = $client->get_by_domain_tld($domain, $tld);
+		$subdomains = [];
+		foreach ($data as $details) {
+			$subdomain = new self();
+			$subdomain->details = $details;
+			$subdomain->id = $details['id'];
+			$subdomains[] = $subdomain;
+		}
+		return $subdomains;
+	}
 }
