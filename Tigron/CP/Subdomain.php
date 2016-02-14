@@ -87,6 +87,20 @@ class Subdomain {
 	}
 
 	/**
+	 * Save
+	 *
+	 * @access public
+	 */
+	public function save() {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		if (isset($this->id)) {
+			$client->update($this->id, $this->details);
+		} else {
+			$this->id = $this->insert($this->id, $this->details);
+		}
+	}
+
+	/**
 	 * Get by id
 	 *
 	 * @access public
@@ -120,5 +134,24 @@ class Subdomain {
 			$subdomains[] = $subdomain;
 		}
 		return $subdomains;
+	}
+
+	/**
+	 * Get by domain tld
+	 *
+	 * @access public
+	 * @param string $name
+	 * @param string $domain
+	 * @param string $tld
+	 * @return array $subdomains
+	 */
+	public static function get_by_name_domain_tld($name, $domain, $tld) {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$details = $client->get_by_name_domain_tld($name, $domain, $tld);
+
+		$subdomain = new self();
+		$subdomain->details = $details;
+		$subdomain->id = $details['id'];
+		return $subdomain;
 	}
 }
