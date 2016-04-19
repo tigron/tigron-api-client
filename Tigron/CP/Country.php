@@ -8,8 +8,7 @@
  */
 namespace Tigron\CP;
 
-class Reseller {
-
+class Country {
 	/**
 	 * ID
 	 *
@@ -46,7 +45,7 @@ class Reseller {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -88,46 +87,57 @@ class Reseller {
 	}
 
 	/**
-	 * Save function
+	 * Get by id
 	 *
 	 * @access public
-	 */
-	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
-		if (isset($this->details['id']) AND $this->details['id'] > 0) {
-			$this->details = $client->update($this->details['id'], $this->details);
-		} else {
-			$this->id = $client->insert($this->details);
-		}
-		$this->get_details();
-	}
-
-	/**
-	 * Get a Reseller by ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @Return Reseller
+	 * @return \Tigron\Country $contact
 	 */
 	public static function get_by_id($id) {
-		$reseller = new Reseller($id);
-		return $reseller;
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+		$details = $client->get_by_id($id);
+		$country = new self();
+		$country->id = $details['id'];
+		$country->details = $details;
+
+		return $country;
 	}
 
 	/**
-	 * Get all resellers
+	 * Get all
 	 *
 	 * @access public
-	 * @return array Reseller
+	 * @return array $countries
 	 */
 	public static function get_all() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
-		$reseller_info = $client->get_all();
-		$resellers = [];
-		foreach ($reseller_info as $info) {
-			$resellers[] = Reseller::get_by_id($info['id']);
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+		$data = $client->get_all();
+		$countries = [];
+		foreach ($data as $details) {
+			$country = new self();
+			$country->id = $details['id'];
+			$country->details = $details;
+			$countries[] = $country;
 		}
-		return $resellers;
+
+		return $countries;
 	}
 
+	/**
+	 * Get grouped
+	 *
+	 * @access public
+	 * @return array $countries
+	 */
+	public static function get_grouped() {
+		$countries = self::get_all();
+		$grouped = [ 'Europe' => [], 'World' => [] ];
+		foreach ($countries as $country) {
+			if ($country->european_continent) {
+				$grouped['Europe'][] = $country;
+			} else {
+				$grouped['World'][] = $country;
+			}
+		}
+		return $grouped;
+	}
 }

@@ -93,6 +93,30 @@ class User {
 	}
 
 	/**
+	 * Validate
+	 *
+	 * @access public
+	 * @param array $errors
+	 * @return bool $validated
+	 */
+	public function validate(&$errors) {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
+		if (!isset($this->id) OR $this->id === null) {
+			$errors = $client->validate(0, $this->details);
+		} else {
+			$errors = $client->validate($this->id, $this->details);
+		}
+
+		$errors = array_flip($errors);
+
+		if (count($errors) > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
 	 * Save function
 	 *
 	 * @access public
@@ -142,7 +166,6 @@ class User {
 		return $user;
 	}
 
-
 	/**
 	 * Get by ID
 	 *
@@ -157,5 +180,25 @@ class User {
 		$user->id = $info['id'];
 		$user->details = $info;
 		return $user;
+	}
+
+	/**
+	 * Search a user
+	 *
+	 * @access public
+	 * @return array $users
+	 * @param string $search
+	 */
+	public static function search($search) {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
+		$data = $client->search($search);
+		$users = array();
+		foreach ($data as $details) {
+			$user = new self();
+			$user->details = $details;
+			$user->id = $details['id'];
+			$users[] = $user;
+		}
+		return $users;
 	}
 }
