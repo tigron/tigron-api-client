@@ -132,6 +132,15 @@ class User {
 	}
 
 	/**
+	 * Get info
+	 *
+	 * @access public
+	 */
+	public function get_info() {
+		return $this->details;
+	}
+
+	/**
 	 * Get by reseller
 	 *
 	 * @access public
