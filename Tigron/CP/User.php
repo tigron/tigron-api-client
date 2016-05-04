@@ -26,6 +26,14 @@ class User {
 	public $details;
 
 	/**
+	 * Objectcache
+	 *
+	 * @access private
+	 * @var array $objectcache
+	 */
+	private static $objectcache = [];
+
+	/**
 	 * Contructor
 	 *
 	 * @access private
@@ -63,7 +71,11 @@ class User {
 	 * @return mixed
 	 */
 	public function __get($key) {
-		return $this->details[$key];
+		if ($key == 'reseller') {
+			return Reseller::get_by_id($this->reseller_id);
+		} else {
+			return $this->details[$key];
+		}
 	}
 
 	/**
@@ -85,7 +97,9 @@ class User {
 	 * @return bool $isset
 	 */
 	public function __isset($key) {
-		if (isset($this->details[$key])) {
+		if ($key == 'reseller') {
+			return true;
+		} elseif (isset($this->details[$key])) {
 			return true;
 		} else {
 			return false;
@@ -183,12 +197,15 @@ class User {
 	 * @Return User $user
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
-		$info = $client->get_by_id($id);
-		$user = new User();
-		$user->id = $info['id'];
-		$user->details = $info;
-		return $user;
+		if (!isset(self::$objectcache[$id])) {
+			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
+			$info = $client->get_by_id($id);
+			$user = new User();
+			$user->id = $info['id'];
+			$user->details = $info;
+			self::$objectcache[$id] = $user;
+		}
+		return self::$objectcache[$id];
 	}
 
 	/**
