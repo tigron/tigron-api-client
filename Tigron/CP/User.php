@@ -26,14 +26,6 @@ class User {
 	public $details;
 
 	/**
-	 * Objectcache
-	 *
-	 * @access private
-	 * @var array $objectcache
-	 */
-	private static $objectcache = [];
-
-	/**
 	 * Contructor
 	 *
 	 * @access private
@@ -55,12 +47,6 @@ class User {
 	private function get_details() {
 		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
 		$this->details = $client->get_by_id($this->id);
-
-		$customer_tigron_users = \Customer_Tigron_User::get_by_tigron_user($this);
-
-		foreach ($customer_tigron_users as $customer_tigron_user) {
-			$this->details['customer_id'] = $customer_tigron_user->customer_id;
-		}
 	}
 
 	/**
@@ -197,15 +183,7 @@ class User {
 	 * @Return User $user
 	 */
 	public static function get_by_id($id) {
-		if (!isset(self::$objectcache[$id])) {
-			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/user?wsdl');
-			$info = $client->get_by_id($id);
-			$user = new User();
-			$user->id = $info['id'];
-			$user->details = $info;
-			self::$objectcache[$id] = $user;
-		}
-		return self::$objectcache[$id];
+		return new self($id);
 	}
 
 	/**
