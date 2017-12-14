@@ -125,7 +125,10 @@ class Reseller {
 		$reseller_info = $client->get_all();
 		$resellers = [];
 		foreach ($reseller_info as $info) {
-			$resellers[] = Reseller::get_by_id($info['id']);
+			$reseller = new self();
+			$reseller->id = $info['id'];
+			$reseller->details = $info;
+			$resellers[] = $reseller;
 		}
 		return $resellers;
 	}
