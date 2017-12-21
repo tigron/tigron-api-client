@@ -26,6 +26,13 @@ class Language {
 	public $details;
 
 	/**
+	 * Country cache
+	 *
+	 * @access private
+	 */
+	private static $cache = [];
+
+	/**
 	 * Contructor
 	 *
 	 * @access private
@@ -93,13 +100,16 @@ class Language {
 	 * @return \Tigron\Language $contact
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/language?wsdl');
-		$details = $client->get_by_id($id);
-		$language = new self();
-		$language->id = $details['id'];
-		$language->details = $details;
+		if (!isset(self::$cache[$id])) {
+			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/language?wsdl');
+			$details = $client->get_by_id($id);
+			$language = new self();
+			$language->id = $details['id'];
+			$language->details = $details;
+			self::$cache[$id] = $language;
+		}
 
-		return $language;
+		return self::$cache[$id];
 	}
 
 	/**

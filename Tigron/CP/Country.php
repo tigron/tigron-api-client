@@ -26,6 +26,13 @@ class Country {
 	public $details;
 
 	/**
+	 * Country cache
+	 *
+	 * @access private
+	 */
+	private static $cache = [];
+
+	/**
 	 * Contructor
 	 *
 	 * @access private
@@ -93,13 +100,16 @@ class Country {
 	 * @return \Tigron\Country $contact
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
-		$details = $client->get_by_id($id);
-		$country = new self();
-		$country->id = $details['id'];
-		$country->details = $details;
+		if (!isset(self::$cache[$id])) {
+			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+			$details = $client->get_by_id($id);
+			$country = new self();
+			$country->id = $details['id'];
+			$country->details = $details;
+			self::$cache[$id] = $country;
+		}
 
-		return $country;
+		return self::$cache[$id];
 	}
 
 	/**
