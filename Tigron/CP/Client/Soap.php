@@ -36,7 +36,8 @@ class Soap {
 		$options = [
 			'trace' => true,
 			'cache_wsdl' => $cache_wsdl,
-			'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | 9
+			'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP | 9,
+			'cache_wsdl' => WSDL_CACHE_DISK,			
 		];
 
 		$this->soapclient = new \SoapClient($soap_service, $options);
