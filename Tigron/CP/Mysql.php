@@ -8,7 +8,7 @@
  */
 namespace Tigron\CP;
 
-class Product {
+class Mysql {
 	/**
 	 * ID
 	 *
@@ -45,7 +45,7 @@ class Product {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -87,63 +87,38 @@ class Product {
 	}
 
 	/**
-	 * Save function
-	 *
-	 * @access public
-	 */
-	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product?wsdl');
-		if (isset($this->details['id']) AND $this->details['id'] > 0) {
-			$this->details = $client->update($this->details['id'], $this->details);
-		} else {
-			$this->id = $client->insert($this->details);
-		}
-		$this->get_details();
-	}
-
-	/**
-	 * Get
-
-	/**
 	 * Get by id
 	 *
 	 * @access public
-	 * @return \Tigron\Product $product
+	 * @return \Tigron\Mysql $mysql
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
 		$details = $client->get_by_id($id);
-		$product = new self();
-		$product->id = $details['id'];
-		$product->details = $details;
+		$mysql = new self();
+		$mysql->id = $details['id'];
+		$mysql->details = $details;
 
-		return $product;
+		return $mysql;
 	}
 
 	/**
-	 * Get by user category
+	 * Get by user
 	 *
 	 * @access public
 	 * @param \Tigron\User $user
-	 * @param \Tigron\Product\Category $category
-	 * @return array $products
+	 * @return array $mysqls
 	 */
-	public static function get_by_user_category(\Tigron\CP\User $user, \Tigron\CP\Product\Type\Category $category) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product?wsdl');
-		$data = $client->get_by_user_category($user->id, $category->id);
-		$products = [];
+	public static function get_by_product(\Tigron\CP\Product $product) {
+		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
+		$data = $client->get_mysql_by_product($product->id);
+		$mysqls = [];
 		foreach ($data as $details) {
-			$classname = '\Tigron\CP\\' . str_replace('_', '\\', $details['classname']);
-
-			if (class_exists($classname)) {
-				$product = new $classname;
-			} else {
-				$product = new self();
-			}
-			$product->details = $details;
-			$product->id = $details['id'];
-			$products[] = $product;
+			$mysql = new self();
+			$mysql->details = $details;
+			$mysql->id = $details['id'];
+			$mysqls[] = $mysql;
 		}
-		return $products;
+		return $mysqls;
 	}
 }
