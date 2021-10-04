@@ -52,7 +52,7 @@ class Country {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -101,7 +101,7 @@ class Country {
 	 */
 	public static function get_by_id($id) {
 		if (!isset(self::$cache[$id])) {
-			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+			$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
 			$details = $client->get_by_id($id);
 			$country = new self();
 			$country->id = $details['id'];
@@ -119,7 +119,7 @@ class Country {
 	 * @return array $countries
 	 */
 	public static function get_all() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/country?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
 		$data = $client->get_all();
 		$countries = [];
 		foreach ($data as $details) {

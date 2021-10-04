@@ -25,6 +25,14 @@ class Soap {
 	private $headers = [];
 
 	/**
+	 * Clients
+	 *
+	 * @access private
+	 * @var array $clients
+	 */
+	private static $clients = [];
+
+	/**
 	 * Constructor
 	 *
 	 * @param string soap_service
@@ -36,7 +44,6 @@ class Soap {
 			'compression' => \SOAP_COMPRESSION_ACCEPT | \SOAP_COMPRESSION_GZIP | 9,
 			'cache_wsdl' => \WSDL_CACHE_DISK,
 		];
-
 		$this->soapclient = new \SoapClient($soap_service, $options);
 	}
 
@@ -135,5 +142,21 @@ class Soap {
 		$headers = [];
 		$headers[] = new \SoapHeader('http://www.tigron.net/ns/', 'authenticate_user', [ \Tigron\CP\Config::$tigron_username, \Tigron\CP\Config::$tigron_password ]);
 		return $headers;
+	}
+
+	/**
+	 * Get the client
+	 *
+	 * @access public
+	 * @param string $url
+	 * @return \Tigron\CP\Client $client
+	 */
+	public static function get($url) {
+		if (isset(self::$clients[$url])) {
+			return self::$clients[$url];
+		}
+		$client = new self($url);
+		self::$clients[$url] = $client;
+		return $client;
 	}
 }

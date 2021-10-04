@@ -45,7 +45,7 @@ class Contact {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Contact {
 	 * @return \Tigron\Contact $contact
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
 		$details = $client->get_by_id($id);
 		$contact = new self();
 		$contact->id = $details['id'];
@@ -110,7 +110,7 @@ class Contact {
 	 * @return array $contacts
 	 */
 	public static function get_by_user(\Tigron\User $user) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
 		$data = $client->get_by_user($user->id);
 		$contacts = [];
 		foreach ($data as $details) {

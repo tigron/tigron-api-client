@@ -45,7 +45,7 @@ class Creditnote {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Creditnote {
 	 * @return array $fileinfo
 	 */
 	public function get_pdf() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		return $client->get_pdf($this->id);
 	}
 
@@ -104,7 +104,7 @@ class Creditnote {
 	 * @return \Tigron\Creditnote $creditnote
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		$details = $client->get_by_id($id);
 		$creditnote = new self();
 		$creditnote->id = $details['id'];
@@ -121,7 +121,7 @@ class Creditnote {
 	 * @return Creditnote $creditnote
 	 */
 	public static function get_by_number($number) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		$details = $client->get_by_number($number);
 		$creditnote = new self();
 		$creditnote->id = $details['id'];
@@ -138,7 +138,7 @@ class Creditnote {
 	 * @return array $creditnotes
 	 */
 	public static function get_by_user(\Tigron\User $user) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		$data = $client->get_by_user($user->id);
 		$creditnotes = [];
 		foreach ($data as $details) {
@@ -158,7 +158,7 @@ class Creditnote {
 	 * @return array $creditnotes
 	 */
 	public static function get_paged($sort, $direction, $page, $extra_conditions) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/creditnote?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/creditnote?wsdl');
 		$data = $client->get_paged($sort, $direction, $page, $extra_conditions);
 		$creditnotes = [];
 		foreach ($data as $details) {

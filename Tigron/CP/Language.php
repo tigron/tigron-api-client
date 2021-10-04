@@ -52,7 +52,7 @@ class Language {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/language?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/language?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -101,7 +101,7 @@ class Language {
 	 */
 	public static function get_by_id($id) {
 		if (!isset(self::$cache[$id])) {
-			$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/language?wsdl');
+			$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/language?wsdl');
 			$details = $client->get_by_id($id);
 			$language = new self();
 			$language->id = $details['id'];
@@ -119,7 +119,7 @@ class Language {
 	 * @return array $countries
 	 */
 	public static function get_all() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/language?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/language?wsdl');
 		$data = $client->get_all();
 		$countries = [];
 		foreach ($data as $details) {

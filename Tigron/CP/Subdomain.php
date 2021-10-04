@@ -45,7 +45,7 @@ class Subdomain {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/subdomain?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Subdomain {
 	 * @access public
 	 */
 	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/subdomain?wsdl');
 		if (isset($this->id)) {
 			$client->update($this->id, $this->details);
 		} else {
@@ -107,7 +107,7 @@ class Subdomain {
 	 * @return \Tigron\Product $product
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/subdomain?wsdl');
 		$details = $client->get_by_id($id);
 		$subdomain = new self();
 		$subdomain->id = $details['id'];
@@ -124,7 +124,7 @@ class Subdomain {
 	 * @return array $subdomains
 	 */
 	public static function get_by_domain_tld($domain, $tld) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/subdomain?wsdl');
 		$data = $client->get_by_domain_tld($domain, $tld);
 		$subdomains = [];
 		foreach ($data as $details) {
@@ -146,7 +146,7 @@ class Subdomain {
 	 * @return array $subdomains
 	 */
 	public static function get_by_name_domain_tld($name, $domain, $tld) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/subdomain?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/subdomain?wsdl');
 		$details = $client->get_by_name_domain_tld($name, $domain, $tld);
 
 		$subdomain = new self();

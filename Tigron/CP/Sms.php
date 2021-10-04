@@ -46,7 +46,7 @@ class Sms {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/sms?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/sms?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -94,7 +94,7 @@ class Sms {
 	 * @return \Tigron\Cp\Sms $sms
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/sms?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/sms?wsdl');
 		$details = $client->get_by_id($id);
 		$mysql = new self();
 		$mysql->id = $details['id'];
@@ -111,8 +111,8 @@ class Sms {
 	 * @return array $mysqls
 	 */
 	public static function get_overview() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/sms?wsdl');
-		$user = \Tigron\CP\User::Get();		
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/sms?wsdl');
+		$user = \Tigron\CP\User::Get();
 		$data = $client->get_overview($user->id);
 		return $data;
 	}
@@ -125,8 +125,8 @@ class Sms {
 	 * @return array $mysqls
 	 */
 	public static function get_history_by_user(\Tigron\CP\User $user) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/sms?wsdl');
-		$user = \Tigron\CP\User::Get();		
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/sms?wsdl');
+		$user = \Tigron\CP\User::Get();
 		$data = $client->get_history_by_user($user->id);
 		$result = [];
 		foreach ($data as $row) {
@@ -147,8 +147,8 @@ class Sms {
 	 * @param string $message
 	 */
 	public function send_sms($from, $to, $message) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/sms?wsdl');
-		$user = \Tigron\CP\User::Get();		
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/sms?wsdl');
+		$user = \Tigron\CP\User::Get();
 		return $client->send_sms($user->id, $from, $to, $message);
-	}	
+	}
 }

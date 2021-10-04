@@ -45,7 +45,7 @@ class Type {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product_type?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Type {
 	 * @access public
 	 */
 	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product_type?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -119,7 +119,7 @@ class Type {
 	 * @return Product_Type $product_type
 	 */
 	public static function get_by_product_type_category(\Tigron\CP\Product\Type\Category $product_type_category) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product_type?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type?wsdl');
 		$details = $client->get_by_product_type_category_reseller($product_type_category->id, \Tigron\CP\User::get()->reseller_id);
 
 		$types = [];

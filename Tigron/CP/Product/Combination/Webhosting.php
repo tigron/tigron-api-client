@@ -16,7 +16,7 @@ class Webhosting extends \Tigron\CP\Product {
 	 * @access public
 	 */
 	public function get_mysql_product() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/product?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product?wsdl');
 		try {
 			$product_id = $client->get_mysql_product($this->id);
 		} catch (\Exception $e) {

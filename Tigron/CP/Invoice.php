@@ -45,7 +45,7 @@ class Invoice {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Invoice {
 	 * @return array $fileinfo
 	 */
 	public function get_pdf() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		return $client->get_pdf($this->id);
 	}
 
@@ -104,7 +104,7 @@ class Invoice {
 	 * @return \Tigron\Invoice $invoice
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		$details = $client->get_by_id($id);
 		$invoice = new self();
 		$invoice->id = $details['id'];
@@ -122,7 +122,7 @@ class Invoice {
 	 * @return Invoice $invoice
 	 */
 	public static function get_by_number($number) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		$details = $client->get_by_number($number);
 		$invoice = new self();
 		$invoice->id = $details['id'];
@@ -139,7 +139,7 @@ class Invoice {
 	 * @return array $invoices
 	 */
 	public static function get_by_user(\Tigron\User $user) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		$data = $client->get_by_user($user->id);
 		$invoices = [];
 		foreach ($data as $details) {
@@ -159,7 +159,7 @@ class Invoice {
 	 * @return array $invoices
 	 */
 	public static function get_paged($sort, $direction, $page, $extra_conditions) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice?wsdl');
 		$data = $client->get_paged($sort, $direction, $page, $extra_conditions);
 		$invoices = [];
 		foreach ($data as $details) {

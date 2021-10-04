@@ -45,7 +45,7 @@ class Mysql {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Mysql {
 	 * @return \Tigron\Mysql $mysql
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
 		$details = $client->get_by_id($id);
 		$mysql = new self();
 		$mysql->id = $details['id'];
@@ -110,7 +110,7 @@ class Mysql {
 	 * @return array $mysqls
 	 */
 	public static function get_by_product(\Tigron\CP\Product $product) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/mysql?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
 		$data = $client->get_mysql_by_product($product->id);
 		$mysqls = [];
 		foreach ($data as $details) {

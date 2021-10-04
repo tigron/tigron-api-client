@@ -46,7 +46,7 @@ class Reseller {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -93,7 +93,7 @@ class Reseller {
 	 * @access public
 	 */
 	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -121,7 +121,7 @@ class Reseller {
 	 * @return array Reseller
 	 */
 	public static function get_all() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/reseller?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
 		$reseller_info = $client->get_all();
 		$resellers = [];
 		foreach ($reseller_info as $info) {

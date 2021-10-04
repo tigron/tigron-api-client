@@ -20,7 +20,7 @@ if ($user->is_reseller) {
 echo 'user;domain;firstname;lastname;company;email' . "\n";
 
 foreach ($users as $user) {
-	$products = Tigron\CP\Product::get_by_user_category(Tigron\CP\User::get(), $category);
+	$products = Tigron\CP\Product::get_by_user_category($user, $category);
 
 	foreach ($products as $product) {
 		$contact = Tigron\CP\Contact::get_by_id($product->contact_id);

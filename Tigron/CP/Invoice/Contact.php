@@ -45,7 +45,7 @@ class Contact {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_contact?wsdl');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +92,7 @@ class Contact {
 	 * @access public
 	 */
 	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_contact?wsdl');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -108,7 +108,7 @@ class Contact {
 	 * @return Invoice_Contact $order_item
 	 */
 	public static function get_by_id($id) {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/invoice_contact?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_contact?wsdl');
 		$details = $client->get_by_id($id);
 		$invoice_contact = new self();
 		$invoice_contact->id = $details['id'];

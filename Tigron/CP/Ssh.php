@@ -44,7 +44,7 @@ class Ssh {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/ssh?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
 		$this->details = $client->get_by_user($this->user_id);
 	}
 
@@ -91,7 +91,7 @@ class Ssh {
 	 * @access public
 	 */
 	public function save() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/ssh?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
 		if (isset($this->user_id)) {
 			$client->update($this->user_id, $this->details);
 		} else {
@@ -106,7 +106,7 @@ class Ssh {
 	 * @access public
 	 */
 	public function generate_key_pair() {
-		$client = new \Tigron\CP\Client\Soap('http://api.tigron.net/soap/ssh?wsdl');
+		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
 		$client->generate_key_pair();
 		$this->get_details();
 	}
