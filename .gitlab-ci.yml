@@ -1,0 +1,27 @@
+stages:
+  - quality
+
+lint73:
+  stage: quality
+  image:
+    name: php:7.3-cli
+  script:
+    - shopt -s globstar
+    - set -e
+    - for x in **/*.php; do php -l "$x"; done
+
+lint81:
+  stage: quality
+  image:
+    name: php:8.1-cli
+  script:
+    - shopt -s globstar
+    - set -e
+    - for x in **/*.php; do php -l "$x"; done
+
+insights:
+  stage: quality
+  image:
+    name: nunomaduro/phpinsights
+    entrypoint: [""]
+  script: /usr/bin/phpinsights --no-interaction --config-path=.phpinsights.php
