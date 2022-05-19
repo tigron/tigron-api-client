@@ -1,12 +1,9 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Country class
  */
-namespace Tigron\CP;
+
+namespace Tigron\Cp;
 
 class Country {
 	/**
@@ -52,7 +49,7 @@ class Country {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('country');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -101,7 +98,7 @@ class Country {
 	 */
 	public static function get_by_id($id) {
 		if (!isset(self::$cache[$id])) {
-			$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
+			$client = \Tigron\Cp\Client\Soap::get('country');
 			$details = $client->get_by_id($id);
 			$country = new self();
 			$country->id = $details['id'];
@@ -119,7 +116,7 @@ class Country {
 	 * @return array $countries
 	 */
 	public static function get_all() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/country?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('country');
 		$data = $client->get_all();
 		$countries = [];
 		foreach ($data as $details) {

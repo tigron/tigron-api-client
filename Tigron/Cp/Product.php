@@ -1,12 +1,9 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Product class
  */
-namespace Tigron\CP;
+
+namespace Tigron\Cp;
 
 class Product {
 	/**
@@ -45,7 +42,7 @@ class Product {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('product');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +89,7 @@ class Product {
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('product');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -111,7 +108,7 @@ class Product {
 	 * @return \Tigron\Product $product
 	 */
 	public static function get_by_id($id) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('product');
 		$details = $client->get_by_id($id);
 		$product = new self();
 		$product->id = $details['id'];
@@ -128,12 +125,12 @@ class Product {
 	 * @param \Tigron\Product\Category $category
 	 * @return array $products
 	 */
-	public static function get_by_user_category(\Tigron\CP\User $user, \Tigron\CP\Product\Type\Category $category) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product?wsdl');
+	public static function get_by_user_category(\Tigron\Cp\User $user, \Tigron\Cp\Product\Type\Category $category) {
+		$client = \Tigron\Cp\Client\Soap::get('product');
 		$data = $client->get_by_user_category($user->id, $category->id);
 		$products = [];
 		foreach ($data as $details) {
-			$classname = '\Tigron\CP\\' . str_replace('_', '\\', $details['classname']);
+			$classname = '\Tigron\Cp\\' . str_replace('_', '\\', $details['classname']);
 
 			if (class_exists($classname)) {
 				$product = new $classname;

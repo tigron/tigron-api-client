@@ -1,14 +1,12 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Reseller class
  */
-namespace Tigron\CP\Invoice;
 
-class Queue {
+namespace Tigron\Cp;
+
+class Reseller {
+
 	/**
 	 * ID
 	 *
@@ -45,7 +43,7 @@ class Queue {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_queue?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('reseller');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +90,7 @@ class Queue {
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_queue?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('reseller');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -102,32 +100,34 @@ class Queue {
 	}
 
 	/**
-	 * Get by id
+	 * Get a Reseller by ID
 	 *
 	 * @access public
 	 * @param int $id
-	 * @return Invoice_Queue $invoice_queue
+	 * @Return Reseller
 	 */
 	public static function get_by_id($id) {
-		return new self($id);
+		$reseller = new Reseller($id);
+		return $reseller;
 	}
 
 	/**
-	 * Get all
+	 * Get all resellers
 	 *
 	 * @access public
-	 * @return array $users
+	 * @return array Reseller
 	 */
 	public static function get_all() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/invoice_queue?wsdl');
-		$details = $client->get_by_reseller(\Tigron\CP\User::get()->reseller_id);
-		$users = array();
-		foreach ($details as $detail) {
-			$temp_invoice_queue = new self();
-			$temp_invoice_queue->id = $detail['id'];
-			$temp_invoice_queue->details = $detail;
-			$invoice_queue[] = $temp_invoice_queue;
+		$client = \Tigron\Cp\Client\Soap::get('reseller');
+		$reseller_info = $client->get_all();
+		$resellers = [];
+		foreach ($reseller_info as $info) {
+			$reseller = new self();
+			$reseller->id = $info['id'];
+			$reseller->details = $info;
+			$resellers[] = $reseller;
 		}
-		return $invoice_queue;
+		return $resellers;
 	}
+
 }

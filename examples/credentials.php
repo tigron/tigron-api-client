@@ -1,9 +1,10 @@
 <?php
+include dirname(__FILE__) . '/../../../autoload.php';
 
 /**
  * This file includes the Tigron credentials
  * These are required to make the examples work
  */
 
-Tigron\CP\Config::$tigron_username = 'my_username';
-Tigron\CP\Config::$tigron_password = 'my_password';
+Tigron\Cp\Config::$tigron_username = 'my_username';
+Tigron\Cp\Config::$tigron_password = 'my_password';

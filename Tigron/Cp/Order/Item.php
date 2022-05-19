@@ -1,12 +1,9 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Order\Item class
  */
-namespace Tigron\CP\Order;
+
+namespace Tigron\Cp\Order;
 
 class Item {
 	/**
@@ -45,7 +42,7 @@ class Item {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/order_item?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('order_item');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +89,7 @@ class Item {
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/order_item?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('order_item');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -108,7 +105,7 @@ class Item {
 	 * @return Order_Item $order_item
 	 */
 	public static function get_by_id($id) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/order_item?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('order_item');
 		$details = $client->get_by_id($id);
 		$order_item = new self();
 		$order_item->id = $details['id'];

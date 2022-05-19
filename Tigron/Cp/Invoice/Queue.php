@@ -1,14 +1,11 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Invoice\Queue class
  */
-namespace Tigron\CP;
 
-class Contact {
+namespace Tigron\Cp\Invoice;
+
+class Queue {
 	/**
 	 * ID
 	 *
@@ -45,7 +42,7 @@ class Contact {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('invoice_queue');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -87,38 +84,47 @@ class Contact {
 	}
 
 	/**
-	 * Get by id
+	 * Save function
 	 *
 	 * @access public
-	 * @return \Tigron\Contact $contact
 	 */
-	public static function get_by_id($id) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
-		$details = $client->get_by_id($id);
-		$contact = new self();
-		$contact->id = $details['id'];
-		$contact->details = $details;
-
-		return $contact;
+	public function save() {
+		$client = \Tigron\Cp\Client\Soap::get('invoice_queue');
+		if (isset($this->details['id']) AND $this->details['id'] > 0) {
+			$this->details = $client->update($this->details['id'], $this->details);
+		} else {
+			$this->id = $client->insert($this->details);
+		}
+		$this->get_details();
 	}
 
 	/**
-	 * Get by user
+	 * Get by id
 	 *
 	 * @access public
-	 * @param \Tigron\User $user
-	 * @return array $contacts
+	 * @param int $id
+	 * @return Invoice_Queue $invoice_queue
 	 */
-	public static function get_by_user(\Tigron\User $user) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/contact?wsdl');
-		$data = $client->get_by_user($user->id);
-		$contacts = [];
-		foreach ($data as $details) {
-			$contact = new self();
-			$contact->details = $details;
-			$contact->id = $details['id'];
-			$contacts[] = $contact;
+	public static function get_by_id($id) {
+		return new self($id);
+	}
+
+	/**
+	 * Get all
+	 *
+	 * @access public
+	 * @return array $users
+	 */
+	public static function get_all() {
+		$client = \Tigron\Cp\Client\Soap::get('invoice_queue');
+		$details = $client->get_by_reseller(\Tigron\Cp\User::get()->reseller_id);
+		$users = array();
+		foreach ($details as $detail) {
+			$temp_invoice_queue = new self();
+			$temp_invoice_queue->id = $detail['id'];
+			$temp_invoice_queue->details = $detail;
+			$invoice_queue[] = $temp_invoice_queue;
 		}
-		return $contacts;
+		return $invoice_queue;
 	}
 }

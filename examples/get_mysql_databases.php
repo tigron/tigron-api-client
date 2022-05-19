@@ -1,17 +1,16 @@
 <?php
-include dirname(__FILE__) . '/../../../autoload.php';
 include 'credentials.php';
 
 /**
  * Fetch all the product_types from Tigron Control panel
  * The product_types will be grouped based on their category
  */
-$webhosting = Tigron\CP\Product\Type\Category::get_by_identifier('webhosting');
-$user = \Tigron\CP\User::Get();
+$webhosting = Tigron\Cp\Product\Type\Category::get_by_identifier('webhosting');
+$user = \Tigron\Cp\User::Get();
 
 if ($user->is_reseller) {
-	$reseller = \Tigron\CP\Reseller::get_by_id($user->reseller_id);
-	$users = \Tigron\CP\User::get_by_reseller($reseller);
+	$reseller = \Tigron\Cp\Reseller::get_by_id($user->reseller_id);
+	$users = \Tigron\Cp\User::get_by_reseller($reseller);
 } else {
 	$users = [ $user ];
 }
@@ -19,7 +18,7 @@ if ($user->is_reseller) {
 
 foreach ($users as $user) {
 
-	$products = Tigron\CP\Product::get_by_user_category($user, $webhosting);
+	$products = Tigron\Cp\Product::get_by_user_category($user, $webhosting);
 
 	if (count($products) == 0) {
 		continue;
@@ -28,7 +27,7 @@ foreach ($users as $user) {
 	echo $user->username . "\n";
 
 	foreach ($products as $product) {
-		$product_type = \Tigron\CP\Product\Type::get_by_id($product->product_type_id);
+		$product_type = \Tigron\Cp\Product\Type::get_by_id($product->product_type_id);
 		echo "\t" . $product->domain . '.' . $product->tld . " (" . $product_type->name . ")\n";
 
 		try {
@@ -38,7 +37,7 @@ foreach ($users as $user) {
 			continue;
 		}
 
-		$databases = \Tigron\CP\Mysql::get_by_product($mysql_product);
+		$databases = \Tigron\Cp\Mysql::get_by_product($mysql_product);
 
 		if (count($databases) == 0) {
 			echo "\t\t" . 'no databases' . "\n";

@@ -1,14 +1,11 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Invoice\Contact class
  */
-namespace Tigron\CP\Product\Type;
 
-class Category {
+namespace Tigron\Cp\Invoice;
+
+class Contact {
 	/**
 	 * ID
 	 *
@@ -45,7 +42,7 @@ class Category {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type_category?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('invoice_contact');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -92,7 +89,7 @@ class Category {
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type_category?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('invoice_contact');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -102,47 +99,19 @@ class Category {
 	}
 
 	/**
-	 * Get product types
+	 * Get by id
 	 *
 	 * @access public
+	 * @return Invoice_Contact $order_item
 	 */
-	public function get_product_types() {
-		return \Tigron\CP\Product\Type::get_by_product_type_category($this);
+	public static function get_by_id($id) {
+		$client = \Tigron\Cp\Client\Soap::get('invoice_contact');
+		$details = $client->get_by_id($id);
+		$invoice_contact = new self();
+		$invoice_contact->id = $details['id'];
+		$invoice_contact->details = $details;
+
+		return $invoice_contact;
 	}
 
-	/**
-	 * Get all
-	 *
-	 * @access public
-	 * @return array $users
-	 */
-	public static function get_all() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type_category?wsdl');
-		$details = $client->get_all();
-		$categories = array();
-		foreach ($details as $detail) {
-			$temp_ptc = new self();
-			$temp_ptc->id = $detail['id'];
-			$temp_ptc->details = $detail;
-			$categories[] = $temp_ptc;
-		}
-		return $categories;
-	}
-
-	/**
-	 * Get by identifier
-	 *
-	 * @access public
-	 * @param string $identifier
-	 * @return Category
-	 */
-	public static function get_by_identifier($identifier) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/product_type_category?wsdl');
-		$details = $client->get_by_identifier($identifier);
-
-		$category = new self();
-		$category->details = $details;
-		$category->id = $details['id'];
-		return $category;
-	}
 }

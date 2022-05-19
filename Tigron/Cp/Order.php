@@ -1,20 +1,18 @@
 <?php
 /**
- * Tigron Front-user
- *
- * @package Tigron
+ * Order class
  */
-namespace Tigron\CP;
 
-class Ssh {
+namespace Tigron\Cp;
 
+class Order {
 	/**
 	 * ID
 	 *
 	 * @access public
 	 * @var int $id
 	 */
-	public $user_id;
+	public $id;
 
 	/**
 	 * Details
@@ -31,9 +29,9 @@ class Ssh {
 	 * @param string $username
 	 * @param string $password
 	 */
-	public function __construct($user_id = null) {
-		if ($user_id !== null) {
-			$this->user_id = $user_id;
+	public function __construct($id = null) {
+		if ($id !== null) {
+			$this->id = $id;
 			$this->get_details();
 		}
 	}
@@ -44,8 +42,8 @@ class Ssh {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
-		$this->details = $client->get_by_user($this->user_id);
+		$client = \Tigron\Cp\Client\Soap::get('order');
+		$this->details = $client->get_by_id($this->id);
 	}
 
 	/**
@@ -86,39 +84,34 @@ class Ssh {
 	}
 
 	/**
-	 * Save
+	 * Save function
 	 *
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
-		if (isset($this->user_id)) {
-			$client->update($this->user_id, $this->details);
+		$client = \Tigron\Cp\Client\Soap::get('order');
+		if (isset($this->details['id']) AND $this->details['id'] > 0) {
+			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
-			throw new \Exception('Cannot create a new SSH product');
+			$this->id = $client->insert($this->details);
 		}
 		$this->get_details();
 	}
 
 	/**
-	 * Generate key_pair
+	 * Get by id
 	 *
 	 * @access public
+	 * @return Order $order
 	 */
-	public function generate_key_pair() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/ssh?wsdl');
-		$client->generate_key_pair();
-		$this->get_details();
+	public static function get_by_id($id) {
+		$client = \Tigron\Cp\Client\Soap::get('order');
+		$details = $client->get_by_id($id);
+		$order = new self();
+		$order->id = $details['id'];
+		$order->details = $details;
+
+		return $order;
 	}
 
-	/**
-	 * Get by user
-	 *
-	 * @access public
-	 * @param \Tigron\User $user
-	 * @return array $contacts
-	 */
-	public static function get_by_user(\Tigron\CP\User $user) {
-		return new self($user->id);
-	}
 }

@@ -1,12 +1,9 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * User Class
  */
-namespace Tigron\CP;
+
+namespace Tigron\Cp;
 
 class User {
 	/**
@@ -45,7 +42,7 @@ class User {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -100,7 +97,7 @@ class User {
 	 * @return bool $validated
 	 */
 	public function validate(&$errors) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		if (!isset($this->id) OR $this->id === null) {
 			$errors = $client->validate(0, $this->details);
 		} else {
@@ -122,7 +119,7 @@ class User {
 	 * @access public
 	 */
 	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		if (isset($this->details['id']) AND $this->details['id'] > 0) {
 			$this->details = $client->update($this->details['id'], $this->details);
 		} else {
@@ -147,8 +144,8 @@ class User {
 	 * @param \Tigron\Reseller $reseller
 	 * @return array $users
 	 */
-	public static function get_by_reseller(\Tigron\CP\Reseller $reseller) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+	public static function get_by_reseller(\Tigron\Cp\Reseller $reseller) {
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		$details = $client->get_by_reseller($reseller->id);
 		$users = array();
 		foreach ($details as $detail) {
@@ -167,7 +164,7 @@ class User {
 	 * @Return Reseller
 	 */
 	public static function get() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		$info = $client->info();
 		$user = new User();
 		$user->id = $info['id'];
@@ -194,7 +191,7 @@ class User {
 	 * @param string $search
 	 */
 	public static function search($search) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/user?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('user');
 		$data = $client->search($search);
 		$users = array();
 		foreach ($data as $details) {

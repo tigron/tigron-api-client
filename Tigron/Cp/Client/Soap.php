@@ -1,12 +1,9 @@
 <?php
 /**
- * Client_soap class
- *
- * @author Gerry Demaret <gerry@tigron.be>
- * @author Christophe Gosiau <christophe@tigron.be>
+ * Client\Soap class
  */
 
-namespace Tigron\CP\Client;
+namespace Tigron\Cp\Client;
 
 class Soap {
 
@@ -39,12 +36,15 @@ class Soap {
 	 * @access private
 	 */
 	public function __construct($soap_service) {
+		$soap_url = \Tigron\Cp\Config::$tigron_api_url . $soap_service . '?wsdl';
+
 		$options = [
 			'trace' => true,
-			'compression' => \SOAP_COMPRESSION_ACCEPT | \SOAP_COMPRESSION_GZIP | 9,
+			'compression' => SOAP_COMPRESSION_ACCEPT | \SOAP_COMPRESSION_GZIP | 9,
 			'cache_wsdl' => \WSDL_CACHE_DISK,
 		];
-		$this->soapclient = new \SoapClient($soap_service, $options);
+
+		$this->soapclient = new \SoapClient($soap_url, $options);
 	}
 
 	/**
@@ -68,6 +68,7 @@ class Soap {
 	public function __call($name, $arguments) {
 		$headers = $this->generate_soap_headers();
 		$this->set_headers($headers);
+
 		try {
 			return $this->decode($this->soapclient->__soapCall($name, $arguments, [], $this->headers));
 		} catch (\SoapFault $sf) {
@@ -140,7 +141,7 @@ class Soap {
 	 */
 	private function generate_soap_headers() {
 		$headers = [];
-		$headers[] = new \SoapHeader('http://www.tigron.net/ns/', 'authenticate_user', [ \Tigron\CP\Config::$tigron_username, \Tigron\CP\Config::$tigron_password ]);
+		$headers[] = new \SoapHeader('http://www.tigron.net/ns/', 'authenticate_user', [ \Tigron\Cp\Config::$tigron_username, \Tigron\Cp\Config::$tigron_password ]);
 		return $headers;
 	}
 
@@ -149,7 +150,7 @@ class Soap {
 	 *
 	 * @access public
 	 * @param string $url
-	 * @return \Tigron\CP\Client $client
+	 * @return \Tigron\Cp\Client $client
 	 */
 	public static function get($url) {
 		if (isset(self::$clients[$url])) {

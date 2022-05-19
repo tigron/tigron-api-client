@@ -1,15 +1,11 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Contact class
  */
-namespace Tigron\CP;
 
-class Reseller {
+namespace Tigron\Cp;
 
+class Contact {
 	/**
 	 * ID
 	 *
@@ -46,7 +42,7 @@ class Reseller {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('contact');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -88,49 +84,38 @@ class Reseller {
 	}
 
 	/**
-	 * Save function
+	 * Get by id
 	 *
 	 * @access public
-	 */
-	public function save() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
-		if (isset($this->details['id']) AND $this->details['id'] > 0) {
-			$this->details = $client->update($this->details['id'], $this->details);
-		} else {
-			$this->id = $client->insert($this->details);
-		}
-		$this->get_details();
-	}
-
-	/**
-	 * Get a Reseller by ID
-	 *
-	 * @access public
-	 * @param int $id
-	 * @Return Reseller
+	 * @return \Tigron\Contact $contact
 	 */
 	public static function get_by_id($id) {
-		$reseller = new Reseller($id);
-		return $reseller;
+		$client = \Tigron\Cp\Client\Soap::get('contact');
+		$details = $client->get_by_id($id);
+		$contact = new self();
+		$contact->id = $details['id'];
+		$contact->details = $details;
+
+		return $contact;
 	}
 
 	/**
-	 * Get all resellers
+	 * Get by user
 	 *
 	 * @access public
-	 * @return array Reseller
+	 * @param \Tigron\User $user
+	 * @return array $contacts
 	 */
-	public static function get_all() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/reseller?wsdl');
-		$reseller_info = $client->get_all();
-		$resellers = [];
-		foreach ($reseller_info as $info) {
-			$reseller = new self();
-			$reseller->id = $info['id'];
-			$reseller->details = $info;
-			$resellers[] = $reseller;
+	public static function get_by_user(\Tigron\User $user) {
+		$client = \Tigron\Cp\Client\Soap::get('contact');
+		$data = $client->get_by_user($user->id);
+		$contacts = [];
+		foreach ($data as $details) {
+			$contact = new self();
+			$contact->details = $details;
+			$contact->id = $details['id'];
+			$contacts[] = $contact;
 		}
-		return $resellers;
+		return $contacts;
 	}
-
 }

@@ -1,12 +1,11 @@
 <?php
-include dirname(__FILE__) . '/../../../autoload.php';
 include 'credentials.php';
 
 /**
  * Fetch all the product_types from Tigron Control panel
  * The product_types will be grouped based on their category
  */
-$categories = Tigron\CP\Product\Type\Category::get_all();
+$categories = Tigron\Cp\Product\Type\Category::get_all();
 
 foreach ($categories as $category) {
 	echo $category->name . "\n";

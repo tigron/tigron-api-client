@@ -1,18 +1,17 @@
 <?php
-include dirname(__FILE__) . '/../../../autoload.php';
 include 'credentials.php';
 
 /**
  * Fetch all the domain names from Tigron Control panel and output
  * all information
  */
-$category = Tigron\CP\Product\Type\Category::get_by_identifier('domain');
+$category = Tigron\Cp\Product\Type\Category::get_by_identifier('domain');
 
-$user = \Tigron\CP\User::Get();
+$user = \Tigron\Cp\User::Get();
 
 if ($user->is_reseller) {
-	$reseller = \Tigron\CP\Reseller::get_by_id($user->reseller_id);
-	$users = \Tigron\CP\User::get_by_reseller($reseller);
+	$reseller = \Tigron\Cp\Reseller::get_by_id($user->reseller_id);
+	$users = \Tigron\Cp\User::get_by_reseller($reseller);
 } else {
 	$users = [ $user ];
 }
@@ -20,10 +19,10 @@ if ($user->is_reseller) {
 echo 'user;domain;firstname;lastname;company;email' . "\n";
 
 foreach ($users as $user) {
-	$products = Tigron\CP\Product::get_by_user_category($user, $category);
+	$products = Tigron\Cp\Product::get_by_user_category($user, $category);
 
 	foreach ($products as $product) {
-		$contact = Tigron\CP\Contact::get_by_id($product->contact_id);
+		$contact = Tigron\Cp\Contact::get_by_id($product->contact_id);
 		echo $user->username . ';';
 		echo $product->domain . '.' . $product->tld . ';';
 		echo $contact->firstname . ';';

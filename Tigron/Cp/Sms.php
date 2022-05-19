@@ -1,14 +1,12 @@
 <?php
 /**
- * Tigron Front-user
- *
- * This file is a part of the Tigron Application 'Front-User'
- *
- * @package Tigron
+ * Sms class
  */
-namespace Tigron\CP;
 
-class Mysql {
+namespace Tigron\Cp;
+
+class Sms {
+
 	/**
 	 * ID
 	 *
@@ -45,7 +43,7 @@ class Mysql {
 	 * @access private
 	 */
 	private function get_details() {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('sms');
 		$this->details = $client->get_by_id($this->id);
 	}
 
@@ -90,10 +88,10 @@ class Mysql {
 	 * Get by id
 	 *
 	 * @access public
-	 * @return \Tigron\Mysql $mysql
+	 * @return \Tigron\Cp\Sms $sms
 	 */
 	public static function get_by_id($id) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
+		$client = \Tigron\Cp\Client\Soap::get('sms');
 		$details = $client->get_by_id($id);
 		$mysql = new self();
 		$mysql->id = $details['id'];
@@ -109,16 +107,45 @@ class Mysql {
 	 * @param \Tigron\User $user
 	 * @return array $mysqls
 	 */
-	public static function get_by_product(\Tigron\CP\Product $product) {
-		$client = \Tigron\CP\Client\Soap::get('http://api.tigron.net/soap/mysql?wsdl');
-		$data = $client->get_mysql_by_product($product->id);
-		$mysqls = [];
-		foreach ($data as $details) {
-			$mysql = new self();
-			$mysql->details = $details;
-			$mysql->id = $details['id'];
-			$mysqls[] = $mysql;
+	public static function get_overview() {
+		$client = \Tigron\Cp\Client\Soap::get('sms');
+		$user = \Tigron\Cp\User::Get();
+		$data = $client->get_overview($user->id);
+		return $data;
+	}
+
+	/**
+	 * Get by user
+	 *
+	 * @access public
+	 * @param \Tigron\User $user
+	 * @return array $mysqls
+	 */
+	public static function get_history_by_user(\Tigron\Cp\User $user) {
+		$client = \Tigron\Cp\Client\Soap::get('sms');
+		$user = \Tigron\Cp\User::Get();
+		$data = $client->get_history_by_user($user->id);
+		$result = [];
+		foreach ($data as $row) {
+			$sms = new self();
+			$sms->id = $row['id'];
+			$sms->details = $row;
+			$result[] = $sms;
 		}
-		return $mysqls;
+		return $result;
+	}
+
+	/**
+	 * Send an sms message
+	 *
+	 * @access public
+	 * @param string $from
+	 * @param string $to
+	 * @param string $message
+	 */
+	public function send_sms($from, $to, $message) {
+		$client = \Tigron\Cp\Client\Soap::get('sms');
+		$user = \Tigron\Cp\User::Get();
+		return $client->send_sms($user->id, $from, $to, $message);
 	}
 }
