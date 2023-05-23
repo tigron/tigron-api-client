@@ -100,10 +100,10 @@ class Mysql {
 	}
 
 	/**
-	 * Get by user
+	 * Get by product
 	 *
 	 * @access public
-	 * @param \Tigron\User $user
+	 * @param \Tigron\Cp\Product $product
 	 * @return array $mysqls
 	 */
 	public static function get_by_product(\Tigron\Cp\Product $product) {
